@@ -1,0 +1,12 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: idp-gitops
+  description: Desired state of the Kubernetes cluster (ArgoCD ApplicationSet + per-service values)
+  annotations:
+    github.com/project-slug: taha-idp-lab/idp-gitops
+spec:
+  type: gitops-config
+  lifecycle: experimental
+  owner: group:platform-team
+  system: idp-demo
