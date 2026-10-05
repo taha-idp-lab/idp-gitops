@@ -1,0 +1,5 @@
+# Dev environment values for test-docs (overrides chart/values.yaml in the service repo)
+image:
+  tag: "cc1bebe3ae1deb69e544af96200919c92a561747"
+
+replicaCount: 1
