@@ -1,0 +1,45 @@
+# Generates one ArgoCD Application per folder in apps/ (environment: dev).
+# Adding apps/<service>/values-dev.yaml is all it takes to deploy a service.
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: services-dev
+  namespace: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/taha-idp-lab/idp-gitops.git
+        revision: HEAD
+        directories:
+          - path: apps/*
+  template:
+    metadata:
+      name: '{{.path.basename}}-dev'
+      labels:
+        environment: dev
+    spec:
+      project: default
+      sources:
+        # 1) The Helm chart, from the service's own repository
+        - repoURL: 'https://github.com/taha-idp-lab/{{.path.basename}}.git'
+          targetRevision: main
+          path: chart
+          helm:
+            releaseName: '{{.path.basename}}'
+            valueFiles:
+              - '$values/apps/{{.path.basename}}/values-dev.yaml'
+        # 2) The environment values, from this GitOps repository
+        - repoURL: https://github.com/taha-idp-lab/idp-gitops.git
+          targetRevision: HEAD
+          ref: values
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{.path.basename}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
