@@ -3,6 +3,6 @@
 image:
   # The first CI run publishes the image a few minutes after the repository is created.
   # Until then the pod retries the pull (ImagePullBackOff is expected for a short while).
-  tag: "f30a2cb925847bc6a766e518b14eb80d9c76aef2"
+  tag: "7245a060b72683391b9561161b95a39bb16877f3"
   pullPolicy: IfNotPresent
 replicaCount: 1
